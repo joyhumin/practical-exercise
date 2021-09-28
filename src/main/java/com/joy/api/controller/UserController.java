@@ -2,8 +2,10 @@ package com.joy.api.controller;
 
 import com.joy.api.data.model.User;
 import com.joy.api.data.payloads.ResponseMessage;
+import com.joy.api.exception.EmailNotUniqueException;
 import com.joy.api.exception.UserNotFoundException;
 import com.joy.api.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +15,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/{email}")
     public ResponseEntity<User> getUserByEmail( @PathVariable("email") String email) throws UserNotFoundException {
@@ -28,12 +27,12 @@ public class UserController {
 
     @PutMapping("/{email}")
     public ResponseEntity<User> updateUserByEmail(@PathVariable("email") String email, @RequestBody User user) throws UserNotFoundException {
-        Optional<User> updatedUser = userService.updateUserByEmail(email, user);
-        return ResponseEntity.ok().body(updatedUser.get());
+        User updatedUser = userService.updateUserByEmail(email, user);
+        return ResponseEntity.ok().body(updatedUser);
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseMessage> addUser(@RequestBody  User newUser){
+    public ResponseEntity<ResponseMessage> addUser(@RequestBody  User newUser) throws EmailNotUniqueException {
         userService.addUser(newUser);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

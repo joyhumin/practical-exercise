@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface IUserService {
     User getUserByEmail(String email);
     void deleteUserByEmail(String email);
-    Optional<User> updateUserByEmail(String email,User user);
+    User updateUserByEmail(String email,User user);
     ResponseMessage addUser(User user);
 }

@@ -1,69 +1,28 @@
 package com.joy.api.data.model;
 
 
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user_record")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
-    @Column(name = "first_name")
-    private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
     @Email(message = "Email should be valid")
     @NotEmpty
-    @Id @Column(name = "email")
+    @Id
     private String email;
-//    TODO: encrypt password?
+    private String firstName;
+    private String lastName;
     @NotEmpty
-    @Column(name = "password")
     private String password;
-
-    public User(){}
-
-    public User(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public String toString() {
