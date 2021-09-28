@@ -49,6 +49,12 @@ public class UserService implements IUserService {
 
     @Override
     public ResponseMessage addUser(User user) {
-        return null;
+        User newUser;
+        newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword());
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        return new ResponseMessage("New User created successfully");
     }
 }
