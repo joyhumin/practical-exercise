@@ -6,9 +6,11 @@ import com.joy.api.controller.UserController;
 import com.joy.api.data.model.User;
 import com.joy.api.data.payloads.ResponseMessage;
 import com.joy.api.data.repository.UserRepository;
+import com.joy.api.exception.EmailNotUniqueException;
 import com.joy.api.exception.UserNotFoundException;
 import com.joy.api.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.springframework.beans.NotReadablePropertyException;
@@ -89,6 +91,30 @@ public class UserControllerTest {
     }
 
     @Test
+    void testAddUserThrowNotUniqueException() throws Exception{
+        String email = "abc@gmail.com";
+        User updatedUser = User.builder()
+                .firstName("Ana")
+                .lastName("Lexi")
+                .email(email)
+                .password("password")
+                .build();
+
+        when(userService.addUser(updatedUser)).thenThrow(new EmailNotUniqueException(email));
+
+        MockHttpServletRequestBuilder mockRequest =
+                MockMvcRequestBuilders.post("/users" )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(this.mapper.writeValueAsString(updatedUser));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is("400 BAD_REQUEST")))
+                .andExpect(jsonPath("$.message", is("This email address abc@gmail.com exist, please use another one")));
+    }
+
+    @Test
     void testUpdateUserSuccess() throws Exception{
         User updatedUser = User.builder()
                 .firstName("Joy")
@@ -161,16 +187,5 @@ public class UserControllerTest {
 
     }
 
-    @Test
-    void testBadRequst() throws Exception{
-        String email = "123";
 
-        MockHttpServletRequestBuilder mockRequest =
-                MockMvcRequestBuilders.delete("/users/" + email)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isBadRequest());
-    }
 }
