@@ -9,14 +9,17 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class User {
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     @Email(message = "Email should be valid")
     @NotEmpty
-    @Id
+    @Id @Column(name = "email")
     private String email;
 //    TODO: encrypt password?
     @NotEmpty
+    @Column(name = "password")
     private String password;
 
     public User(){}
