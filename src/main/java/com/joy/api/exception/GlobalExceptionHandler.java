@@ -2,6 +2,7 @@ package com.joy.api.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -15,7 +16,7 @@ import javax.validation.ConstraintViolationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({UserNotFoundException.class, EmailNotUniqueException.class, ConstraintViolationException.class})
+    @ExceptionHandler({UserNotFoundException.class, EmailNotUniqueException.class, ConstraintViolationException.class, MethodArgumentNotValidException.class})
     public final ResponseEntity<ApiError> handleException(Exception ex){
 
 
@@ -29,7 +30,11 @@ public class GlobalExceptionHandler {
         else if (ex instanceof EmailNotUniqueException){
             EmailNotUniqueException notUnique = (EmailNotUniqueException) ex;
             return handleEmailNotUniqueException(notUnique, HttpStatus.BAD_REQUEST);
-        } else {
+        } else if (ex instanceof MethodArgumentNotValidException){
+            MethodArgumentNotValidException invalid = (MethodArgumentNotValidException) ex;
+            return handleExceptionalInternal(invalid, HttpStatus.BAD_REQUEST);
+        }
+        else {
             return handleExceptionalInternal(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

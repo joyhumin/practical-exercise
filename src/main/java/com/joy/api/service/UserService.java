@@ -51,6 +51,7 @@ public class UserService implements IUserService {
         newUser.setPassword(user.getPassword());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
+        userRepository.save(newUser);
 
         return new ResponseMessage("New User created successfully");
     }

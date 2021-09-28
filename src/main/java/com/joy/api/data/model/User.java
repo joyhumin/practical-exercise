@@ -18,10 +18,14 @@ public class User {
     @Email(message = "Email should be valid")
     @NotEmpty
     @Id
+    @Column(name = "email")
     private String email;
+    @Column(name = "firstname")
     private String firstName;
+    @Column(name = "lastname")
     private String lastName;
     @NotEmpty
+    @Column(name = "password")
     private String password;
 
     @Override

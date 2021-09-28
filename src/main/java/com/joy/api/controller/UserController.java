@@ -11,11 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Optional;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+//@Validated
 public class UserController {
     private final UserService userService;
 
@@ -26,13 +27,13 @@ public class UserController {
     }
 
     @PutMapping("/{email}")
-    public ResponseEntity<User> updateUserByEmail(@PathVariable("email") String email, @RequestBody User user) throws UserNotFoundException {
+    public ResponseEntity<User> updateUserByEmail(@PathVariable("email") String email, @Valid @RequestBody User user) throws UserNotFoundException {
         User updatedUser = userService.updateUserByEmail(email, user);
         return ResponseEntity.ok().body(updatedUser);
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseMessage> addUser(@RequestBody  User newUser) throws EmailNotUniqueException {
+    public ResponseEntity<ResponseMessage> addUser(@Valid @RequestBody  User newUser) throws EmailNotUniqueException {
         userService.addUser(newUser);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
