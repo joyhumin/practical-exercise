@@ -26,6 +26,7 @@ public class User {
     private String lastName;
     @NotEmpty
     @Column(name = "password")
+    // TODO: maybe encrypt the password rather than store the naive text?
     private String password;
 
     @Override
